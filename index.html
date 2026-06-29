@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北海道自駕之旅 2026</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --snow: #F8FAFC;
+    --lavender: #F3E8FF;
+    --slate: #1E293B;
+    --indigo: #6366F1;
+    --violet: #7C3AED;
+    --mist: #E2E8F0;
+    --gold: #D4A847;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--snow);
+    color: var(--slate);
+    margin: 0; padding: 0;
+  }
+
+  /* ─── NAV ─────────────────────────────── */
+  #top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(248,250,252,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--mist);
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 16px; overflow-x: auto;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 6px 14px; border-radius: 9999px;
+    border: 1.5px solid var(--mist);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .2s;
+    background: transparent; color: #475569;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { border-color: var(--violet); color: var(--violet); }
+  .nav-btn.active {
+    background: var(--violet); border-color: var(--violet);
+    color: #fff; box-shadow: 0 2px 12px rgba(124,58,237,.3);
+  }
+  .nav-home {
+    font-size: 18px; margin-right: 4px;
+    background: none; border: none; cursor: pointer;
+    padding: 4px 8px; border-radius: 8px; transition: background .15s;
+  }
+  .nav-home:hover { background: var(--lavender); }
+
+  /* ─── HERO ─────────────────────────────── */
+  .hero {
+    position: relative; height: 480px; overflow: hidden;
+  }
+  .hero-img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: opacity .5s;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(30,41,59,.15) 0%, rgba(30,41,59,.72) 100%);
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 40px 48px;
+  }
+  .hero-eyebrow {
+    font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,255,255,.75); font-weight: 500; margin-bottom: 10px;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px,5vw,56px); font-weight: 700;
+    color: #fff; line-height: 1.15; margin-bottom: 12px;
+  }
+  .hero-sub {
+    font-size: 15px; color: rgba(255,255,255,.82);
+    font-weight: 300; letter-spacing: .03em;
+  }
+
+  /* ─── CONTENT CONTAINER ─────────────────── */
+  .content { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* ─── OVERVIEW CARDS ────────────────────── */
+  .overview-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+    gap: 16px; margin-top: 32px;
+  }
+  .day-card {
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--mist); background: #fff;
+    cursor: pointer; transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  }
+  .day-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(124,58,237,.13);
+  }
+  .day-card-img { width: 100%; height: 140px; object-fit: cover; display: block; }
+  .day-card-body { padding: 16px 18px 18px; }
+  .day-card-tag {
+    display: inline-block;
+    background: var(--lavender); color: var(--violet);
+    font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    padding: 3px 10px; border-radius: 9999px; margin-bottom: 8px;
+  }
+  .day-card-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+  .day-card-desc { font-size: 13px; color: #64748B; line-height: 1.6; }
+
+  /* ─── TRIP STATS ─────────────────────────── */
+  .stat-row {
+    display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0;
+  }
+  .stat-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border: 1.5px solid var(--mist);
+    border-radius: 12px; padding: 10px 18px;
+    font-size: 14px; color: #334155;
+  }
+  .stat-chip span:first-child { font-size: 20px; }
+  .stat-chip strong { font-weight: 700; }
+
+  /* ─── SECTION HEADING ───────────────────── */
+  .section-label {
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--violet); font-weight: 700; margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700; line-height: 1.25; margin-bottom: 8px;
+  }
+  .section-divider {
+    width: 40px; height: 3px; border-radius: 9999px;
+    background: linear-gradient(90deg, var(--violet), var(--indigo));
+    margin-bottom: 20px;
+  }
+
+  /* ─── TIMELINE ──────────────────────────── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 9px; top: 6px;
+    bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, var(--violet), var(--lavender));
+    border-radius: 1px;
+  }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-dot {
+    position: absolute; left: -25px; top: 4px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--violet);
+    box-shadow: 0 0 0 3px rgba(124,58,237,.2);
+  }
+  .tl-time {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em;
+    color: var(--violet); margin-bottom: 4px;
+  }
+  .tl-card {
+    background: #fff; border-radius: 14px;
+    border: 1px solid var(--mist);
+    padding: 16px 18px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.04);
+  }
+  .tl-card-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tl-card-icon { font-size: 18px; }
+  .tl-card-body { font-size: 13.5px; color: #475569; line-height: 1.75; }
+  .tl-card-body strong { color: var(--slate); font-weight: 600; }
+
+  /* ─── TAGS ──────────────────────────────── */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tag {
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 9999px;
+  }
+  .tag-food { background: #FEF3C7; color: #92400E; }
+  .tag-sight { background: #DBEAFE; color: #1E40AF; }
+  .tag-drive { background: #D1FAE5; color: #065F46; }
+  .tag-stay { background: var(--lavender); color: var(--violet); }
+  .tag-tip { background: #FEE2E2; color: #991B1B; }
+
+  /* ─── TIP BOX ───────────────────────────── */
+  .tip-box {
+    background: linear-gradient(135deg, #EDE9FE, #F3E8FF);
+    border-left: 4px solid var(--violet);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px; margin: 24px 0; font-size: 13.5px;
+    color: #4C1D95; line-height: 1.7;
+  }
+  .tip-box strong { font-weight: 700; }
+
+  /* ─── MAPCODE TABLE ─────────────────────── */
+  .mapcode-box {
+    background: var(--slate); border-radius: 14px;
+    padding: 20px 22px; margin: 24px 0;
+  }
+  .mapcode-title {
+    font-size: 13px; font-weight: 700; color: #94A3B8;
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .mapcode-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.08);
+    font-size: 13px;
+  }
+  .mapcode-row:last-child { border-bottom: none; }
+  .mapcode-place { color: #CBD5E1; }
+  .mapcode-code {
+    font-family: monospace; color: #A5B4FC;
+    font-size: 12px; font-weight: 700;
+    background: rgba(99,102,241,.15); padding: 2px 8px; border-radius: 6px;
+  }
+
+  /* ─── HOTEL HIGHLIGHT ───────────────────── */
+  .hotel-card {
+    background: linear-gradient(135deg, #1E293B, #312E81);
+    border-radius: 16px; padding: 24px; color: #fff; margin: 20px 0;
+  }
+  .hotel-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .hotel-card p { font-size: 13px; color: #CBD5E1; line-height: 1.7; }
+  .hotel-badge {
+    display: inline-block;
+    background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 9999px; margin-bottom: 10px; color: #E0E7FF;
+  }
+
+  /* ─── BACK BUTTON ───────────────────────── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1.5px solid var(--mist); background: #fff;
+    color: #475569; font-size: 13px; font-weight: 600;
+    padding: 8px 18px; border-radius: 9999px;
+    cursor: pointer; transition: all .2s; margin-bottom: 28px;
+  }
+  .back-btn:hover { border-color: var(--violet); color: var(--violet); }
+
+  /* ─── FOOTER ─────────────────────────────── */
+  footer {
+    text-align: center; padding: 32px 20px;
+    font-size: 12px; color: #94A3B8; border-top: 1px solid var(--mist);
+  }
+
+  /* ─── PAGE TRANSITIONS ───────────────────── */
+  .page { display: none; animation: fadeIn .35s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 640px) {
+    .hero-overlay { padding: 28px 24px; }
+    .content { padding: 28px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ NAV ══ -->
+<nav id="top-nav">
+  <div class="nav-inner">
+    <button class="nav-home" onclick="showPage('home')" title="回首頁">🏔️</button>
+    <button class="nav-btn active" onclick="showPage('home')">總覽</button>
+    <button class="nav-btn" onclick="showPage('day1')">Day 1</button>
+    <button class="nav-btn" onclick="showPage('day2')">Day 2</button>
+    <button class="nav-btn" onclick="showPage('day3')">Day 3</button>
+    <button class="nav-btn" onclick="showPage('day4')">Day 4</button>
+    <button class="nav-btn" onclick="showPage('day5')">Day 5</button>
+    <button class="nav-btn" onclick="showPage('day6')">Day 6</button>
+    <button class="nav-btn" onclick="showPage('day7')">Day 7</button>
+    <button class="nav-btn" onclick="showPage('day8')">Day 8</button>
+    <button class="nav-btn" onclick="showPage('day9')">Day 9</button>
+    <button class="nav-btn" onclick="showPage('tips')">💳 ETC/HEP</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ HOME PAGE ══════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?w=1400&q=80&auto=format&fit=crop" alt="北海道薰衣草田" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400&q=80'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">Hokkaido Road Trip · 2026</div>
+      <div class="hero-title">北海道<br>九日自駕之旅</div>
+      <div class="hero-sub">富良野 ▸ 美瑛 ▸ 大雪山 ▸ 洞爺湖 ▸ 登別 ▸ 定山溪 ▸ 札幌</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="stat-row">
+      <div class="stat-chip"><span>📅</span><div><strong>8/17 – 8/25</strong><br><span style="font-size:12px;color:#94A3B8">9天7夜</span></div></div>
+      <div class="stat-chip"><span>🚗</span><div><strong>全程自駕</strong><br><span style="font-size:12px;color:#94A3B8">右駕 + HEP吃到飽</span></div></div>
+      <div class="stat-chip"><span>✈️</span><div><strong>新千歲機場進出</strong><br><span style="font-size:12px;color:#94A3B8">11:55 抵 / 下午離</span></div></div>
+      <div class="stat-chip"><span>🌸</span><div><strong>8月底</strong><br><span style="font-size:12px;color:#94A3B8">花田 · 高山 · 溫泉</span></div></div>
+    </div>
+
+    <div class="section-label">每日行程總覽</div>
+    <div class="section-title">九天的旅程地圖</div>
+    <div class="section-divider"></div>
+
+    <div class="overview-grid">
+
+      <div class="day-card" onclick="showPage('day1')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1620780226630-b7eaa1f7cbb4?w=600&q=75&auto=format&fit=crop" alt="Day1" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 1 · 8/17 (一)</div>
+          <div class="day-card-title">啟程！精靈露台的森林夜光</div>
+          <div class="day-card-desc">新千歲機場取車 → 高速直奔富良野 → 暮色森林精靈露台 → 唯我獨尊黑咖哩</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day2')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=600&q=75&auto=format&fit=crop" alt="Day2" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 2 · 8/18 (二)</div>
+          <div class="day-card-title">富良野縱谷與彩色花海</div>
+          <div class="day-card-desc">富田農場秋之花田 → 富良野果醬園 → 麓鄉展望台俯瞰盆地</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day3')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=600&q=75&auto=format&fit=crop" alt="Day3" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 3 · 8/19 (三)</div>
+          <div class="day-card-title">美瑛丘陵 × Tiffany藍青池</div>
+          <div class="day-card-desc">拼布之路漫遊 → 四季彩之丘高爾夫車 → 白金青池 → 白鬚瀑布</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day4')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=75&auto=format&fit=crop" alt="Day4" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 4 · 8/20 (四)</div>
+          <div class="day-card-title">大雪山高山探險 × 北狐牧場</div>
+          <div class="day-card-desc">層雲峽銀河流星瀑布 → 黑岳纜車五合目 → 北狐牧場被狐狸包圍</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day5')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1576495199011-eb94736d05d6?w=600&q=75&auto=format&fit=crop" alt="Day5" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 5 · 8/21 (五)</div>
+          <div class="day-card-title">活火山 × 洞爺湖夜間煙火</div>
+          <div class="day-card-desc">有珠山纜車火口 → 筒倉展望台日落 → 溫泉旅館 → 湖上煙火大會</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day6')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1568461777827-8b7b4c2cbb10?w=600&q=75&auto=format&fit=crop" alt="Day6" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 6 · 8/22 (六)</div>
+          <div class="day-card-title">地獄谷 × 支笏湖藍</div>
+          <div class="day-card-desc">登別地獄谷 → 大湯沼天然足湯 → 支笏湖透明獨木舟/玻璃船</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day7')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1533050487297-09b450131914?w=600&q=75&auto=format&fit=crop" alt="Day7" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 7 · 8/23 (日)</div>
+          <div class="day-card-title">定山溪·鶴雅森之謌奢華日</div>
+          <div class="day-card-desc">二見吊橋溪谷散策 → 入住鶴雅森之謌 → 露天風呂·岩盤浴·頂級Buffet</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day8')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1551882547-ff40c4a49f71?w=600&q=75&auto=format&fit=crop" alt="Day8" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 8 · 8/24 (一)</div>
+          <div class="day-card-title">札幌採買衝刺 × 螃蟹本家</div>
+          <div class="day-card-desc">螃蟹本家午宴 → 狸小路藥妝採買 → 薄野湯咖哩 → NIKKA霓虹</div>
+        </div>
+      </div>
+
+      <div class="day-card" onclick="showPage('day9')">
+        <img class="day-card-img" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&q=75&auto=format&fit=crop" alt="Day9" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=600'">
+        <div class="day-card-body">
+          <div class="day-card-tag">DAY 9 · 8/25 (二)</div>
+          <div class="day-card-title">新千歲機場·返家</div>
+          <div class="day-card-desc">滿油還車 → 機場免稅衝刺 → 拉麵道場 → 登機回台</div>
+        </div>
+      </div>
+
+    </div><!-- /overview-grid -->
+
+    <div class="tip-box" style="margin-top:36px;">
+      💳 <strong>高速公路提醒：</strong>取車時務必加購 <strong>ETC 卡 + HEP（北海道高速公路吃到飽）</strong>。9天行程建議購買 8+9 天組合，約 15,400～17,200 日圓，讓自駕完全無壓力！<br>
+      👉 <span style="cursor:pointer;text-decoration:underline;" onclick="showPage('tips')">點此查看 ETC/HEP 完整說明</span>
+    </div>
+
+  </div><!-- /content -->
+</div>
+
+<!-- ═══════════════════════════ DAY 1 ══════════════════════════ -->
+<div id="page-day1" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=1400&q=80&auto=format&fit=crop" alt="北海道公路" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 1 · 2026.08.17 (一)</div>
+      <div class="hero-title" style="font-size:36px;">啟程！直奔童話森林</div>
+      <div class="hero-sub">新千歲機場 → 占冠 → 富良野</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+
+    <div class="section-label">今日路線</div>
+    <div class="section-title">機場取車 · 初識北海道</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">11:55 · 降落</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">✈️</span>抵達新千歲機場</div>
+          <div class="tl-card-body">中午時段降落，可避開下午歐美航線尖峰，入關相對順暢。</div>
+          <div class="tag-row"><span class="tag tag-drive">入關</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">13:15 – 14:15 · 取車核心關卡</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>租車 + 辦理 HEP 吃到飽</div>
+          <div class="tl-card-body">搭接駁車前往租車店。辦理手續時：<br>
+          ① 購買 <strong>9天份 HEP（北海道高速公路吃到飽）</strong><br>
+          ② 領取實體 <strong>ETC 卡</strong>並插入車載器<br>
+          ③ 確認投保 NOC 全險<br>
+          ④ 導航切換為中文介面</div>
+          <div class="tag-row"><span class="tag tag-drive">租車</span><span class="tag tag-tip">勿忘HEP</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:15 – 15:30 · 上路</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🛣️</span>高速公路初體驗</div>
+          <div class="tl-card-body">由千歲東 IC 駛入道東自動車道。初期在左側慢車道習慣右駕視野，沿途從平原逐漸轉為壯麗的北海道森林。</div>
+          <div class="tag-row"><span class="tag tag-drive">高速公路</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">15:30 – 16:15 · 自駕停靠</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍦</span>占冠休息站（道之驛しむかっぷ）</div>
+          <div class="tl-card-body">下占冠交流道後 5 分鐘即達。推薦購買：<strong>北海道在地牧場牛乳霜淇淋</strong>或現烤紅豆餅（おやき），坐在戶外木椅吹 24°C 徐徐微風。</div>
+          <div class="tag-row"><span class="tag tag-food">霜淇淋</span><span class="tag tag-sight">道之驛</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">16:15 – 17:15 · 景觀國道</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌄</span>國道 237 號南下 · 迎接黃昏富良野</div>
+          <div class="tl-card-body">右側是壯麗的十勝岳連峰，左側是縱谷農田。陽光轉金黃色，照在公路上極美。</div>
+          <div class="tag-row"><span class="tag tag-drive">景觀公路</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">17:15 – 18:30 · 今日亮點</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌲</span>森林精靈露台（Ningle Terrace）</div>
+          <div class="tl-card-body">停車於新富良野王子飯店免費大型停車場。此時天空帶著深藍色，木屋黃燈剛亮，<strong>Magic Hour 藍調天空 × 木屋點燈</strong>交織，遊客少、光影最美！</div>
+          <div class="tag-row"><span class="tag tag-sight">必去</span><span class="tag tag-sight">魔幻時刻</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">18:45 – 20:00 · 晚餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍛</span>唯我獨尊（Yuiga Doxon）· 富良野黑咖哩</div>
+          <div class="tl-card-body">電話導航：<strong>0167-23-4784</strong><br>
+          點「自家製培根蛋包黑咖哩」，醬汁喝完時，端著盤子對老闆說暗號：<strong>「Ru-Ru-Ru（嚕嚕嚕）」</strong>可免費續醬！</div>
+          <div class="tag-row"><span class="tag tag-food">晚餐</span><span class="tag tag-food">老店名物</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">20:15 ~ · 住宿</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🏨</span>Check-in · 富良野市區飯店</div>
+          <div class="tl-card-body">辦理入住，準備迎接明天的彩色花毯行程。</div>
+          <div class="tag-row"><span class="tag tag-stay">住宿</span></div>
+        </div>
+      </div>
+
+    </div><!-- /timeline -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 2 ══════════════════════════ -->
+<div id="page-day2" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=1400&q=80&auto=format&fit=crop" alt="富良野花田" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 2 · 2026.08.18 (二)</div>
+      <div class="hero-title" style="font-size:36px;">沉浸在縱谷與花香</div>
+      <div class="hero-sub">富良野市區 → 富田農場 → 果醬園 → 麓鄉展望台</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">今日路線</div>
+    <div class="section-title">彩色花毯與在地秘境</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">08:30 – 09:00 · 出發</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌅</span>早晨出發，車程約 20 分鐘</div>
+          <div class="tl-card-body">早晨陽光最溫和，提早出發避開正午烈日。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:00 – 11:30 · 今日重點</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">💐</span>富田農場（Farm Tomita）</div>
+          <div class="tl-card-body">八月底主角是「<strong>秋之彩色花田</strong>」與「花人之田」——一串紅、萬壽菊、向日葵在山坡上鋪成震撼的彩色大條帶。<br><br>
+          <strong>必吃：</strong>薰衣草軟雪糕 + 富良野現切甜哈密瓜，坐在遮陽棚下享用。</div>
+          <div class="tag-row"><span class="tag tag-sight">必去</span><span class="tag tag-food">薰衣草雪糕</span><span class="tag tag-food">哈密瓜</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:00 – 13:30 · 午餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍽️</span>午餐選擇</div>
+          <div class="tl-card-body">
+          <strong>選項A：</strong>富田農場附近「Tomita Melon House」—哈密瓜麵包、哈密瓜冰沙<br>
+          <strong>選項B：</strong>富良野市區「野良窯 Nora Cafe」—在地蔬菜歐風料理 + 精緻手作陶器</div>
+          <div class="tag-row"><span class="tag tag-food">午餐</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:00 – 16:00 · 後山秘境</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🫙</span>富良野果醬園 + 麓鄉展望台</div>
+          <div class="tl-card-body">先在果醬園試吃 30+ 種純天然水果果醬，隔壁有麵包超人專賣店。<br><br>
+          順著指標再開 2 分鐘抵達<strong>麓鄉展望台</strong>——遊客稀少的在地秘境，可俯瞰整個富良野盆地與十勝岳連峰。</div>
+          <div class="tag-row"><span class="tag tag-sight">秘境</span><span class="tag tag-food">試吃果醬</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">16:30 – 18:30 · 移動</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>傍晚沿國道 237 號北上 · Check-in</div>
+          <div class="tl-card-body">開往美瑛或富良野的景觀民宿/飯店，辦理入住。</div>
+          <div class="tag-row"><span class="tag tag-stay">住宿</span><span class="tag tag-drive">美瑛方向</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">18:30 ~ · 晚餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🥩</span>在地和牛或洋食饗宴</div>
+          <div class="tl-card-body">推薦在美瑛或富良野找一家在地小館，享用<strong>美瑛豬肉自慢料理</strong>或在地蔬菜居酒屋。</div>
+          <div class="tag-row"><span class="tag tag-food">晚餐</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 3 ══════════════════════════ -->
+<div id="page-day3" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=1400&q=80&auto=format&fit=crop" alt="青池" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 3 · 2026.08.19 (三)</div>
+      <div class="hero-title" style="font-size:36px;">拼布丘陵 × Tiffany 藍</div>
+      <div class="hero-sub">美瑛拼布之路 → 四季彩之丘 → 白金青池 → 旭川</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">今日路線</div>
+    <div class="section-title">全日本最適合自駕的溫柔丘陵</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:00 – 11:30</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>美瑛「拼布之路」名樹巡禮</div>
+          <div class="tl-card-body">
+          起伏的丘陵台地，不同作物的農田交織，從車窗看出去像一塊塊拼布。<br><br>
+          <strong>Ken &amp; Mary 之樹</strong>（導航：0166-92-4378）<br>
+          <strong>七星之樹</strong>（MapCode：389 157 521*31）<br><br>
+          ⚠️ 注意盲丘路段稍微減速；<strong>絕對不要踏入農田拍照！</strong></div>
+          <div class="tag-row"><span class="tag tag-sight">拼布之路</span><span class="tag tag-drive">自駕重點</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">11:30 – 13:00 · 午餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍤</span>純平洋食（Junque）· 巨大海老丼</div>
+          <div class="tl-card-body">美瑛車站附近，金黃酥脆炸蝦 + 美瑛在地香米。全北海道最出名的炸蝦飯，自駕老饕必排！<br>MapCode：389 010 339*25</div>
+          <div class="tag-row"><span class="tag tag-food">必吃</span><span class="tag tag-food">炸蝦飯</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">13:30 – 15:30 · 今日重點</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌈</span>四季彩之丘（Shikisai no Oka）</div>
+          <div class="tl-card-body">八月底彩色花毯最壯觀！一排排花卉順著山坡起伏，像彩虹絲帶鋪在大地。<br><br>
+          強烈建議租乘<strong>高爾夫球車（Norokko車）</strong>在花田間穿梭拍照。<br>
+          📌 MapCode：349 729 326*11 | 營業至 17:30</div>
+          <div class="tag-row"><span class="tag tag-sight">必去</span><span class="tag tag-sight">高爾夫球車</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">15:45 – 16:30</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">💎</span>白金青池（Blue Pond）</div>
+          <div class="tl-card-body">午後 3-4 點陽光斜射時，最能反射出標誌性的 <strong>Tiffany 藍</strong>。水面因含特殊微量元素，搭配池中枯立的落葉松，靜謐神祕。<br>
+          💰 停車場約 500 日圓<br>
+          📌 MapCode：349 568 888*00</div>
+          <div class="tag-row"><span class="tag tag-sight">必去</span><span class="tag tag-sight">打卡</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">16:35 – 17:00</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">💦</span>白鬚瀑布（Shirahige Waterfall）</div>
+          <div class="tl-card-body">從青池再往山上開 5 分鐘。停在路邊，走到鐵橋上俯瞰：地下水從斷崖岩縫如白鬚噴湧，直墜入藍色的美瑛川（Blue River），遠方大雪山連峰為背景。</div>
+          <div class="tag-row"><span class="tag tag-sight">瀑布</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">17:00 – 18:15 · 移動</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🏙️</span>開往旭川 · Check-in</div>
+          <div class="tl-card-body">沿景觀道路開往北海道第二大城旭川（車程約 50 分鐘）。</div>
+          <div class="tag-row"><span class="tag tag-stay">住宿</span><span class="tag tag-drive">旭川市區</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">18:30 ~ · 晚餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍜</span>道北傳奇——旭川醬油拉麵</div>
+          <div class="tl-card-body">推薦：<strong>青葉</strong>或<strong>梅光軒</strong>（旭川車站周邊）。湯頭融合魚介與豬骨，表面覆蓋一層香濃豬油，入夜降至 20°C 的旭川，一碗熱騰騰拉麵是完美句點。</div>
+          <div class="tag-row"><span class="tag tag-food">旭川拉麵</span><span class="tag tag-food">必吃</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mapcode-box">
+      <div class="mapcode-title">📍 Day 3 MapCode 懶人包</div>
+      <div class="mapcode-row"><span class="mapcode-place">七星之樹</span><span class="mapcode-code">389 157 521*31</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">純平洋食（炸蝦）</span><span class="mapcode-code">389 010 339*25</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">四季彩之丘</span><span class="mapcode-code">349 729 326*11</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">白金青池</span><span class="mapcode-code">349 568 888*00</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 4 ══════════════════════════ -->
+<div id="page-day4" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1400&q=80&auto=format&fit=crop" alt="大雪山" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 4 · 2026.08.20 (四)</div>
+      <div class="hero-title" style="font-size:36px;">高山峽谷 × 北狐牧場</div>
+      <div class="hero-sub">旭川 → 層雲峽 → 黑岳纜車 → 北狐牧場</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">今日路線</div>
+    <div class="section-title">北海道屋脊——大雪山國立公園</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">08:30 – 09:45 · 出發</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>旭川 → 層雲峽（國道39號）</div>
+          <div class="tl-card-body">車程約 1 小時 15 分。沿途隨海拔緩慢上升，兩旁轉為高聳斷崖峭壁與原始針葉林，視野極為開闊壯麗。</div>
+          <div class="tag-row"><span class="tag tag-drive">景觀國道</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:45 – 10:15</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">💦</span>銀河瀑布 × 流星瀑布（日本百選瀑布）</div>
+          <div class="tl-card-body">免費大型停車場。<br>
+          <strong>流星瀑布</strong>：從 90 公尺高的斷崖猛烈奔流，粗獷如男主角<br>
+          <strong>銀河瀑布</strong>：細白如絲綢，順著岩壁分流跌宕<br>
+          八月底在瀑布下迎著飛濺水氣，體感極為乾爽涼快。</div>
+          <div class="tag-row"><span class="tag tag-sight">百選瀑布</span><span class="tag tag-sight">免費</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">10:30 – 12:30 · 今日重點</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚠</span>黑岳纜車 · 五合目（1,300m 避暑聖地）</div>
+          <div class="tl-card-body">大型空中纜車約 7 分鐘即達。八月底高山氣溫僅 <strong>15–17°C</strong>，空氣清新到不可思議。<br><br>
+          沿平緩森林步道漫步至展望台，眺望大雪山連峰。<br>
+          體力充沛可加購<strong>雙人吊椅纜車</strong>上到七合目，雙腳懸空在針葉林上，極具刺激感。</div>
+          <div class="tag-row"><span class="tag tag-sight">纜車</span><span class="tag tag-sight">1300m高山</span><span class="tag tag-sight">避暑</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:30 – 13:30 · 午餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍜</span>層雲峽溫泉街「登山軒」</div>
+          <div class="tl-card-body">享用熱騰騰的「<strong>層雲峽黑岳拉麵</strong>」或在地野菜山產定食。</div>
+          <div class="tag-row"><span class="tag tag-food">午餐</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">13:30 – 14:30 · 景觀自駕</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">⛰️</span>翻越石北峠（1,050m）</div>
+          <div class="tl-card-body">沿國道 39 號繼續往東（約 1 小時）。山道彎曲但路幅寬大、柏油極平，非常好開。</div>
+          <div class="tag-row"><span class="tag tag-drive">山道</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:30 – 16:00 · 今日驚喜</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🦊</span>北狐牧場（北きつね牧場）</div>
+          <div class="tl-card-body">北見市留邊蘂町花丘52-1，備有免費大型停車場。<br><br>
+          進入雙重鐵門後，直接步入狐狸的草地世界！幾十隻北狐自由走動、蜷縮曬太陽。八月底狐狸換夏季薄毛，身形輕盈靈動。<br><br>
+          ⚠️ <strong>請保持 1-2 公尺距離，絕對不要伸手觸碰！</strong></div>
+          <div class="tag-row"><span class="tag tag-sight">超療癒</span><span class="tag tag-sight">北狐</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">16:00 – 17:30 · 折返</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌇</span>迎著黃昏夕陽 · 開回旭川</div>
+          <div class="tl-card-body">車程約 1.5 小時，沿途金黃色夕陽極美。</div>
+          <div class="tag-row"><span class="tag tag-drive">折返旭川</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">18:30 ~ · 晚餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🥩</span>成吉思汗烤羊肉「大黑屋」</div>
+          <div class="tl-card-body">旭川知名排隊名店。厚切羊肉完全沒有羶味！放在凸起圓形鐵烤盤上滋滋作響，搭配在地洋蔥大蔥，配北海道限定生啤酒或哈密瓜汽水，翻山越嶺後最完美的犒賞！</div>
+          <div class="tag-row"><span class="tag tag-food">成吉思汗</span><span class="tag tag-food">必吃</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mapcode-box">
+      <div class="mapcode-title">📍 Day 4 MapCode 懶人包</div>
+      <div class="mapcode-row"><span class="mapcode-place">銀河・流星瀑布停車場</span><span class="mapcode-code">623 204 453*11</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">黑岳纜車站</span><span class="mapcode-code">623 204 513*14</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">北狐牧場</span><span class="mapcode-code">402 337 775*55</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 5 ══════════════════════════ -->
+<div id="page-day5" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1576495199011-eb94736d05d6?w=1400&q=80&auto=format&fit=crop" alt="洞爺湖" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 5 · 2026.08.21 (五)</div>
+      <div class="hero-title" style="font-size:36px;">活火山 × 湖上煙火</div>
+      <div class="hero-sub">旭川 → 砂川SA → 有珠山纜車 → 洞爺湖溫泉</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">今日路線</div>
+    <div class="section-title">南下道央自駕 · 火山湖畔浪漫夜</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">08:30 – 10:00</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>旭川鷹栖IC → 道央自動車道南下</div>
+          <div class="tl-card-body">高速公路筆直好開，有 HEP 完全無壓力，隨意進出交流道。</div>
+          <div class="tag-row"><span class="tag tag-drive">高速公路</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">10:00 – 10:30 · 必停</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍮</span>砂川服務區（全北海道最具規模SA）</div>
+          <div class="tl-card-body"><strong>必吃：北菓樓「岩泡芙（北の夢ドーム）」</strong>——酥脆外皮裹著滿滿香濃生乳與卡士達醬，限定現場販售！再搭一杯在地牧場牛乳，坐在景觀長椅補充續航力。<br>
+          MapCode：179 400 488*11</div>
+          <div class="tag-row"><span class="tag tag-food">北菓樓泡芙</span><span class="tag tag-food">限定</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:30 – 13:30 · 午餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍱</span>昭和新山旁的大地料理</div>
+          <div class="tl-card-body">噴火亭或景觀餐廳，享用在地名產「<strong>噴火灣扇貝釜飯</strong>」或鐵板和牛燒肉，透過窗戶直接看到冒白煙的紅褐色活火山——昭和新山。</div>
+          <div class="tag-row"><span class="tag tag-food">扇貝釜飯</span><span class="tag tag-sight">昭和新山</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">13:30 – 15:00 · 今日重點一</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌋</span>有珠山纜車（Mt. Usu Ropeway）</div>
+          <div class="tl-card-body">6 分鐘登上展望台，八月底山頂風勢強勁、非常涼爽。<br><br>
+          <strong>洞爺湖展望台：</strong>毫無遮蔽地俯瞰整座湛藍洞爺湖與湖中央中島<br>
+          <strong>有珠山火口原展望台：</strong>步行 7 分鐘，近距離俯瞰銀沼大火口，看地表噴出白色火山蒸汽！<br>
+          MapCode：321 433 348*25</div>
+          <div class="tag-row"><span class="tag tag-sight">活火山</span><span class="tag tag-sight">纜車</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">15:15 – 16:15 · 今日重點二</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">📸</span>筒倉展望台（Silo Lookout）</div>
+          <div class="tl-card-body">拍攝洞爺湖的無敵角度。下午金黃陽光照在圓形湖面，一邊喝著<strong>洞爺湖優格飲（飲むヨーグルト）</strong>，一邊拍下藍天 + 湖泊 + 中島 + 羊蹄山的絕美大景。<br>
+          MapCode：321 726 517*77</div>
+          <div class="tag-row"><span class="tag tag-sight">全景</span><span class="tag tag-food">優格飲</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">16:30 ~ · 入住</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">♨️</span>Check-in 洞爺湖溫泉旅館</div>
+          <div class="tl-card-body">換上日式浴衣，前往露天風呂洗去長途自駕的疲憊。晚餐享用道南在地食材——當季噴火灣海鮮刺身、現煎北海道和牛排。</div>
+          <div class="tag-row"><span class="tag tag-stay">溫泉旅館</span><span class="tag tag-food">一泊二食</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">20:45 – 21:10 · 壓軸</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🎆</span>洞爺湖長期煙火大會（湖上花火）</div>
+          <div class="tl-card-body">8月每晚施放，這絕對是入住洞爺湖的最高奢華享受！<br><br>
+          <strong>直接坐在飯店景觀窗前</strong>，或整個人<strong>泡在頂樓露天風呂</strong>裡，看紅、綠、金色煙火在眼前的湖面上空綻放，倒影波光粼粼灑在水面，最浪漫的火山湖畔回憶。</div>
+          <div class="tag-row"><span class="tag tag-sight">湖上煙火</span><span class="tag tag-sight">每晚施放</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mapcode-box">
+      <div class="mapcode-title">📍 Day 5 MapCode 懶人包</div>
+      <div class="mapcode-row"><span class="mapcode-place">砂川服務區（南下）</span><span class="mapcode-code">179 400 488*11</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">有珠山纜車站（昭和新山）</span><span class="mapcode-code">321 433 348*25</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">筒倉展望台</span><span class="mapcode-code">321 726 517*77</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 6 ══════════════════════════ -->
+<div id="page-day6" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1568461777827-8b7b4c2cbb10?w=1400&q=80&auto=format&fit=crop" alt="溫泉" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 6 · 2026.08.22 (六)</div>
+      <div class="hero-title" style="font-size:36px;">地獄谷 × 支笏湖藍</div>
+      <div class="hero-sub">洞爺湖 → 登別地獄谷 → 支笏湖 → 定山溪</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">今日路線</div>
+    <div class="section-title">地熱秘境與全日本最清澈的湖</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">08:30 – 09:30 · 出發</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>洞爺湖 → 登別（道央自動車道）</div>
+          <div class="tl-card-body">由虻田洞爺湖IC上高速，由登別東IC下，沿途看到巨大的<strong>紅色迎賓赤鬼雕像</strong>，順著山路開往登別溫泉區。</div>
+          <div class="tag-row"><span class="tag tag-drive">高速公路</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:30 – 11:30 · 今日重點一</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌋</span>登別地獄谷 + 大湯沼天然足湯</div>
+          <div class="tl-card-body">沿木棧道走入谷地，四周火山岩石寸草不生，不斷噴出滾燙熱水、蒸汽與濃烈硫磺味，宛如地獄。<br><br>
+          開車再往上 5 分鐘至<strong>大湯沼</strong>（爆裂火山口，湖面呈神祕灰黑色）。步行至大湯沼川把腳泡進<strong>天然溫泉足湯</strong>，一邊聽鳥鳴，極療癒！<br>
+          MapCode：603 287 026*55 / 603 288 425*88</div>
+          <div class="tag-row"><span class="tag tag-sight">地獄谷</span><span class="tag tag-sight">足湯免費</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">11:30 – 12:30 · 午餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🦀</span>登別溫泉街·「溫泉市場」海鮮</div>
+          <div class="tl-card-body">現烤噴火灣大扇貝、炭烤海鮮，或嚐嚐登別在地限定的「<strong>閻魔炒麵</strong>」（帶點微辣香氣）。</div>
+          <div class="tag-row"><span class="tag tag-food">扇貝</span><span class="tag tag-food">閻魔炒麵</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:30 – 14:00 · 景觀公路</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌲</span>穿越支笏洞爺國立公園原始森林</div>
+          <div class="tl-card-body">國道36號轉道道141號與國道453號（車程約1小時15分）。兩旁密不透風的原始森林，八月底陽光透過樹葉灑在公路上，搖下車窗冷氣迎面而來，是一大享受。</div>
+          <div class="tag-row"><span class="tag tag-drive">森林公路</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:00 – 16:00 · 今日重點二</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">💙</span>支笏湖·透明獨木舟/水中觀光船</div>
+          <div class="tl-card-body">全日本透明度數一數二的極清澈湖泊（支笏湖藍）！<br><br>
+          <strong>水中觀光玻璃底船</strong>：透過特製玻璃窗，直接看透幾公尺深的清澈藍色湖水、火山陡峭水下柱狀節理，與成群游動的姬鱒魚，宛如天然巨大水族箱。<br>
+          （備案：喜歡活動者可預約透明獨木舟，船底全透明！）<br>
+          MapCode：708 504 337*52</div>
+          <div class="tag-row"><span class="tag tag-sight">必體驗</span><span class="tag tag-sight">玻璃船</span><span class="tag tag-sight">支笏湖藍</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">16:00 – 17:15 · 移動</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🏔️</span>暮色溪谷 · 開往定山溪溫泉鄉</div>
+          <div class="tl-card-body">沿國道453號往北（車程約1小時15分），山路彎道較多，請沉穩駕駛。</div>
+          <div class="tag-row"><span class="tag tag-drive">山路</span><span class="tag tag-stay">定山溪</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">17:15 ~ · 入住</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">♨️</span>Check-in · 定山溪老字號溫泉旅館</div>
+          <div class="tl-card-body">（明天 Day 7 才是鶴雅森之謌奢華日）今晚可選章月Grand酒店或定山溪豪景酒店。換上浴衣，享用日式會席晚宴，到溪谷邊的露天風呂在潺潺溪水聲中泡湯。</div>
+          <div class="tag-row"><span class="tag tag-stay">溫泉旅館</span><span class="tag tag-food">會席晚宴</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mapcode-box">
+      <div class="mapcode-title">📍 Day 6 MapCode 懶人包</div>
+      <div class="mapcode-row"><span class="mapcode-place">登別地獄谷停車場</span><span class="mapcode-code">603 287 026*55</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">大湯沼天然足湯</span><span class="mapcode-code">603 288 425*88</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">支笏湖觀光船乘船處</span><span class="mapcode-code">708 504 337*52</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 7 ══════════════════════════ -->
+<div id="page-day7" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1533050487297-09b450131914?w=1400&q=80&auto=format&fit=crop" alt="溫泉旅館" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 7 · 2026.08.23 (日)</div>
+      <div class="hero-title" style="font-size:36px;">鶴雅森之謌奢華日</div>
+      <div class="hero-sub">定山溪溪谷散策 → 鶴雅森之謌 → 露天風呂 · 岩盤浴 · 頂級Buffet</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">今日路線</div>
+    <div class="section-title">森林深呼吸 · 徹底放鬆的度假日</div>
+    <div class="section-divider"></div>
+
+    <div class="tip-box">
+      🏨 <strong>Jozankei Tsuruga Resort Spa MORI no UTA（鶴雅森之謌）</strong>：以「與森林漫步」為設計概念，大廳有巨大火爐與現場鋼琴演奏。<strong>8月份週日房間非常搶手，請提早訂房！</strong>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:00 – 11:30 · 晨間散步</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌲</span>河童淵 → 二見吊橋</div>
+          <div class="tl-card-body">享用早餐後退房，寄行李在車上，在 18-20°C 的清涼早晨散步。<br><br>
+          <strong>定山源泉公園</strong>：免費溫泉足湯 + 用溫泉水煮溫泉蛋<br>
+          <strong>二見吊橋</strong>：火紅色吊橋，橋下湛綠清澈的豐平川，傳說居住著河童。迎著帶有水氣的涼風，深深吸一口芬多精。</div>
+          <div class="tag-row"><span class="tag tag-sight">溪谷散策</span><span class="tag tag-sight">免費足湯</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">11:30 – 13:00 · 午餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍡</span>坂ノ上の最中（日法融合甜點）</div>
+          <div class="tl-card-body">溫泉街上名店，融合日式傳統最中餅（Monaka）與法式慕斯的精緻創意甜點。<br>
+          午餐推薦鄰近的「<strong>可可利（Kakorin）咖啡</strong>」—北海道在地香米野菜歐風湯咖哩或手工漢堡排。</div>
+          <div class="tag-row"><span class="tag tag-food">甜點</span><span class="tag tag-food">湯咖哩</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">13:30 – 15:00 · 微兜風</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🏞️</span>定山溪水壩展望台</div>
+          <div class="tl-card-body">開車10分鐘往山裡開。從巨大水壩上方俯瞰，兩旁高聳原始群山與翡翠綠的蓄水湖，幾乎沒有遊客，非常安靜愜意。</div>
+          <div class="tag-row"><span class="tag tag-sight">秘境</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">15:00 · 重頭戲</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">👑</span>入住「定山溪鶴雅森之謌」</div>
+          <div class="tl-card-body">門口有專人指引停車並協助提領行李。走進大廳，被巨大高聳原木火爐造型與鋪滿綠色地毯（意象森林草地）的遼闊交誼廳所驚豔。</div>
+          <div class="tag-row"><span class="tag tag-stay">四星度假村</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">15:30 – 18:00 · 放鬆時光</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">♨️</span>露天風呂 · 岩盤浴 · SPA</div>
+          <div class="tl-card-body">換上飯店特製純棉連身浴衣，開始頂級 SPA 之旅：<br><br>
+          <strong>室內大浴場</strong>：高挑木質圓頂，猶如在森林中沐浴<br>
+          <strong>露天風呂</strong>：泡在保濕鹽泉中，抬頭是綠意盎然的針葉林，微涼山風吹在臉上，頭冷腳熱的完美享受<br>
+          <strong>岩盤浴</strong>：躺在溫熱天然礦石上出汗，排出幾天自駕的疲勞</div>
+          <div class="tag-row"><span class="tag tag-sight">露天風呂</span><span class="tag tag-sight">岩盤浴</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">18:30 – 20:30 · 晚餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🦀</span>「森之自助晚宴」頂級Buffet</div>
+          <div class="tl-card-body">溫室景觀餐廳享用 Buffet 晚餐，全日本溫泉飯店中名列前茅：<br><br>
+          ✦ 主廚現煎<strong>北海道頂級和牛排</strong><br>
+          ✦ 現點現做窯烤義式薄脆比薩<br>
+          ✦ 噴火灣大扇貝與海鮮刺身<br>
+          ✦ 無限量供應<strong>松葉蟹腳 + 雪場蟹腳</strong><br>
+          ✦ 精品甜點櫃：哈密瓜千層派、在地乳酪蛋糕</div>
+          <div class="tag-row"><span class="tag tag-food">必吃</span><span class="tag tag-food">頂級Buffet</span><span class="tag tag-food">無限螃蟹</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">21:00 – 22:00 · 浪漫夜晚</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🪵</span>中央大火爐旁·烤棉花糖 + 鋼琴演奏</div>
+          <div class="tl-card-body">飯店免費提供巨大棉花糖，拿著長竹籤親自在炭火上烤到外焦內融。現場鋼琴或豎琴演奏，在溫暖火光與樂音中，享受這趟旅程最完美的奢華夜晚。</div>
+          <div class="tag-row"><span class="tag tag-sight">烤棉花糖</span><span class="tag tag-sight">現場演奏</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      💡 <strong>飯店小撇步：</strong>大廳與走廊鋪設極厚實的高級織品地毯，許多在地人喜歡<strong>赤腳</strong>走在上面，觸感如同踩在森林青苔草地上，非常放鬆！
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 8 ══════════════════════════ -->
+<div id="page-day8" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1551882547-ff40c4a49f71?w=1400&q=80&auto=format&fit=crop" alt="札幌城市" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 8 · 2026.08.24 (一)</div>
+      <div class="hero-title" style="font-size:36px;">螃蟹本家 × 狸小路大採買</div>
+      <div class="hero-sub">定山溪 → 札幌かに本家 → 狸小路 → 薄野</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">今日路線</div>
+    <div class="section-title">最後衝刺：免稅採買與極致螃蟹饗宴</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:00 · 悠閒晨間</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🌄</span>森之謌精緻早餐 → 最後溫泉</div>
+          <div class="tl-card-body">在度假村享用朝食，退房前把握機會再去泡一次早晨露天溫泉，吸滿森林早晨的芬多精。</div>
+          <div class="tag-row"><span class="tag tag-food">精緻早餐</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:30 – 11:00 · 移動</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>定山溪 → 札幌市區（國道230號）</div>
+          <div class="tl-card-body">車程約 1 小時。<br>車載導航輸入：<strong>「札幌 かに本家 站前本店」</strong><br>電話：<strong>011-251-0010</strong></div>
+          <div class="tag-row"><span class="tag tag-drive">最後自駕段</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:00 – 14:00 · 今日重點</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🦀</span>札幌かに本家（站前本店）螃蟹午宴</div>
+          <div class="tl-card-body">
+          <strong>✅ 已預訂：8/24(一) 11:30 · 2名</strong><br><br>
+          在傳統日式包廂（個室）內享用<strong>午間限定會席</strong>（約 4,000~7,000 日圓/人）：<br>
+          ✦ 蟹肉刺身<br>
+          ✦ 蟹肉天婦羅<br>
+          ✦ 螃蟹壽喜燒火鍋<br>
+          ✦ 現場服務「蟹雜炊（稀飯）」，吸滿螃蟹高湯精華</div>
+          <div class="tag-row"><span class="tag tag-food">必吃</span><span class="tag tag-food">螃蟹本家</span><span class="tag tag-food">預訂完成</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:00 – 14:30 · 停車</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🏨</span>飯店 Check-in · 停放車輛</div>
+          <div class="tl-card-body">開往 Comfort Hotel Sapporo Susukino（或附設停車場的市區飯店），辦理入住後停好車。<strong>接下來完全步行，徹底免除市區找車位痛苦！</strong></div>
+          <div class="tag-row"><span class="tag tag-stay">住宿</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:30 – 18:00 · 採買</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🛍️</span>狸小路商店街 + 大通百貨大掃貨</div>
+          <div class="tl-card-body">步行前往，一口氣把所有採買完成：<br>
+          ✦ 松本清、札幌藥妝（藥妝保養品）<br>
+          ✦ 唐吉訶德驚安殿堂（零食、家電、雜貨）<br>
+          ✦ 大丸/三越百貨（精品伴手禮）<br><br>
+          買完<strong>直接步行走回飯店放</strong>，不用提著大包小包逛一整天！</div>
+          <div class="tag-row"><span class="tag tag-sight">採買</span><span class="tag tag-sight">免稅</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">18:30 – 20:30 · 晚餐</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍛</span>薄野名店——GARAKU 湯咖哩 或 Suage+</div>
+          <div class="tl-card-body">中午吃精緻螃蟹，晚上改走狂野都會路線。步行前往薄野鬧區排隊名店，來一碗熱騰騰湯咖哩。</div>
+          <div class="tag-row"><span class="tag tag-food">湯咖哩</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">20:30 – 21:30 · 夜遊</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">📸</span>薄野十字路口 · NIKKA 威士忌霓虹招牌</div>
+          <div class="tl-card-body">與著名的 NIKKA 五彩霓虹招牌拍照留念。八月底的札幌夜風約 20°C，非常涼爽。</div>
+          <div class="tag-row"><span class="tag tag-sight">打卡</span><span class="tag tag-sight">薄野</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">21:30 ~ · 房間</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🍺</span>北海道限定 Sapporo Classic + 整理戰利品</div>
+          <div class="tl-card-body">步行回飯店，喝著北海道限定 Sapporo Classic 生啤酒，一邊把下午採買的戰利品整齊打包進大行李箱。</div>
+          <div class="tag-row"><span class="tag tag-food">Sapporo啤酒</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DAY 9 ══════════════════════════ -->
+<div id="page-day9" class="page">
+  <div class="hero" style="height:340px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80&auto=format&fit=crop" alt="機場" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">DAY 9 · 2026.08.25 (二)</div>
+      <div class="hero-title" style="font-size:36px;">再見，北海道</div>
+      <div class="hero-sub">札幌 → 新千歲機場還車 → 機場採買 → 返家</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+    <div class="section-label">最終回</div>
+    <div class="section-title">滿油還車 · 機場最後衝刺</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">08:30 – 09:30 · 出發</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🚗</span>滿油出發 → 新千歲機場（高速公路，約1小時）</div>
+          <div class="tl-card-body">
+          ⚠️ <strong>還車前重要步驟</strong>：接近機場前，先到 <strong>ENEOS 加油站</strong>，對店員說：<br>
+          「<strong>Regular, Full（レギュラー、満タン）</strong>」<br>把油箱加滿，並保留加油發票。</div>
+          <div class="tag-row"><span class="tag tag-drive">HEP最後一趟</span><span class="tag tag-tip">記得加油</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:30 – 10:00 · 還車</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🔑</span>租車店辦理還車</div>
+          <div class="tl-card-body">工作人員拔下 ETC 卡讀取紀錄。全程 HEP 吃到飽，高速公路過路費 <strong>0 元</strong>！簽字後搭免付費接駁車前往機場航廈。</div>
+          <div class="tag-row"><span class="tag tag-drive">HEP過路費 0圓</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">10:00 – 12:00 · 最後衝刺</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🛍️</span>新千歲機場國內線3樓·伴手禮最終回</div>
+          <div class="tl-card-body">全日本最好逛的機場！把最後的日圓全數花光：<br>
+          ✦ <strong>六花亭</strong>（奶油夾心餅乾）<br>
+          ✦ <strong>北菓樓</strong>（泡芙、年輪蛋糕）<br>
+          ✦ <strong>Royce'</strong>（生巧克力）<br><br>
+          肚子有空間的話，去「<strong>札幌拉麵道場</strong>」來一碗一幻拉麵，或買現烤起司塔在候機室享用。</div>
+          <div class="tag-row"><span class="tag tag-food">六花亭</span><span class="tag tag-food">北菓樓</span><span class="tag tag-food">Royce生巧</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">12:00 ~ · 返家</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">✈️</span>辦理登機，起飛返台</div>
+          <div class="tl-card-body">前往國際線航廈辦理登機，帶著滿滿的北海道回憶與大包行李，滿足地起飛返家。</div>
+          <div class="tag-row"><span class="tag tag-drive">返台</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ TIPS PAGE ══════════════════════════ -->
+<div id="page-tips" class="page">
+  <div class="hero" style="height:280px;">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1617575521317-d2974f3b56d2?w=1400&q=80&auto=format&fit=crop" alt="高速公路" onerror="this.src='https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=1400'">
+    <div class="hero-overlay">
+      <div class="hero-eyebrow">自駕必讀</div>
+      <div class="hero-title" style="font-size:36px;">💳 ETC / HEP 完整說明</div>
+      <div class="hero-sub">北海道高速公路吃到飽——外國人專屬優惠</div>
+    </div>
+  </div>
+  <div class="content">
+    <button class="back-btn" onclick="showPage('home')">← 返回總覽</button>
+
+    <div class="section-label">三種繳費方式</div>
+    <div class="section-title">怎麼繳最划算？</div>
+    <div class="section-divider"></div>
+
+    <div style="display:grid;gap:14px;margin-bottom:32px;">
+      <div style="background:#FEF2F2;border-left:4px solid #EF4444;border-radius:0 12px 12px 0;padding:16px 18px;">
+        <div style="font-weight:700;color:#991B1B;margin-bottom:6px;">❌ 方案 A（最不推）· 一般車道付現/刷卡</div>
+        <div style="font-size:13.5px;color:#7F1D1D;line-height:1.7;">每次停車排隊、搖下車窗、人工收費，費用完全沒折扣，最貴也最麻煩。</div>
+      </div>
+      <div style="background:#FFF7ED;border-left:4px solid #F97316;border-radius:0 12px 12px 0;padding:16px 18px;">
+        <div style="font-weight:700;color:#9A3412;margin-bottom:6px;">⚠️ 方案 B（少跑高速可考慮）· ETC 計次實支實付</div>
+        <div style="font-size:13.5px;color:#7C2D12;line-height:1.7;">租 ETC 卡（330日圓），走 ETC 專用車道自動扣款，最後還車時一次結清。費用與方案A相同，但更方便。</div>
+      </div>
+      <div style="background:#F0FDF4;border-left:4px solid #22C55E;border-radius:0 12px 12px 0;padding:16px 18px;">
+        <div style="font-weight:700;color:#14532D;margin-bottom:6px;">✅ 方案 C（本行程強力推薦）· ETC + HEP 吃到飽</div>
+        <div style="font-size:13.5px;color:#166534;line-height:1.7;">在天數內無論跑幾次高速公路，只收一筆固定費用。開錯路隨時上下交流道完全不用多花一毛錢，帶來無價的安心感！</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:32px;">HEP 官方費率</div>
+    <div class="section-title">費用精算</div>
+    <div class="section-divider"></div>
+
+    <div class="mapcode-box">
+      <div class="mapcode-title">普通車 HEP 定額費用表</div>
+      <div class="mapcode-row"><span class="mapcode-place">4 天</span><span class="mapcode-code">7,700 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">5 天</span><span class="mapcode-code">9,600 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">6 天</span><span class="mapcode-code">11,600 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">7 天</span><span class="mapcode-code">13,500 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">8 天</span><span class="mapcode-code">15,400 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">9 天（4+5天疊加）</span><span class="mapcode-code">17,200 日圓</span></div>
+    </div>
+
+    <div class="tip-box">
+      ⚠️ <strong>注意：</strong>租車幾天，HEP 就必須買滿幾天。本行程8/17下午取車到8/25中午還車，跨越<strong>9個曆日</strong>，費用約 <strong>15,400 ~ 17,200 日圓</strong>之間（由租車公司依取還車確切時間判定）。
+    </div>
+
+    <div class="section-label" style="margin-top:32px;">實際費用比較</div>
+    <div class="section-title">為什麼買 HEP 划算？</div>
+    <div class="section-divider"></div>
+
+    <div class="mapcode-box">
+      <div class="mapcode-title">如果不買 HEP 的驚人原價（單程）</div>
+      <div class="mapcode-row"><span class="mapcode-place">新千歲 → 富良野/旭川</span><span class="mapcode-code">約 4,810 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">旭川 → 洞爺湖</span><span class="mapcode-code">約 6,500 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">洞爺湖 → 支笏湖/定山溪</span><span class="mapcode-code">約 1,500~2,000 日圓</span></div>
+      <div class="mapcode-row"><span class="mapcode-place">定山溪 → 新千歲機場</span><span class="mapcode-code">約 1,430 日圓</span></div>
+      <div class="mapcode-row" style="border-top:1px solid rgba(255,255,255,.2);margin-top:4px;padding-top:12px;">
+        <span class="mapcode-place" style="color:#F1F5F9;font-weight:700;">原價合計（不含來回/繞路）</span>
+        <span class="mapcode-code" style="background:rgba(239,68,68,.25);color:#FCA5A5;font-size:14px;">超過 14,000~15,000+ 日圓</span>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:32px;">辦理流程</div>
+    <div class="section-title">五步驟完整教學</div>
+    <div class="section-divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">Step 1 · 出發前（台灣）</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">💻</span>網路預約租車時勾選 ETC</div>
+          <div class="tl-card-body">Toyota Rent-a-car、Orix、Times 等大廠官網，在配件區勾選「租借 ETC 卡」。若可加購 HEP 也直接勾選；若無選項，在備註欄寫上「要加購 HEP」。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">Step 2 · 8/17 下午取車</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🏢</span>現場櫃檯辦理</div>
+          <div class="tl-card-body">出示護照並說：<br>
+          <strong>「I want to purchase HEP (Hokkaido Expressway Pass).」</strong><br>
+          店員影印護照後，交給您設定好的 ETC 卡，現場收取租車費 + HEP 定額費用。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">Step 3 · 出發前</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🟢</span>插卡確認</div>
+          <div class="tl-card-body">ETC 卡插入車載器後開機應亮<strong>綠燈</strong>，或發出日文語音「ETCカードが挿入されました」代表感應正常。<strong>旅途中千萬不要把卡片拔出來！</strong></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">Step 4 · 旅途中</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">🛣️</span>通過收費站</div>
+          <div class="tl-card-body">尋找標示紫色「<strong>ETC 專用</strong>」或藍色「<strong>ETC/一般共用</strong>」的車道。將車速降至 <strong>20 km/h 以下</strong>緩慢駛入，螢幕顯示「通行可」，欄木自動升起。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">Step 5 · 8/25 中午還車</div>
+        <div class="tl-card">
+          <div class="tl-card-title"><span class="tl-card-icon">✅</span>還車結清</div>
+          <div class="tl-card-body">工作人員拔下 ETC 卡讀取紀錄。全程 HEP 涵蓋的高速公路，過路費 <strong>0 元</strong>，直接簽字還車！（若不小心開到少數不支援路段，補繳幾百日圓差額即可）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  ✈️ 北海道自駕之旅 2026 · 8/17–8/25 &nbsp;｜&nbsp; 富良野 · 美瑛 · 大雪山 · 洞爺湖 · 登別 · 定山溪 · 札幌<br>
+  <span style="color:#CBD5E1;">Made with ❤️ for the road trip crew</span>
+</footer>
+
+<script>
+  const pages = document.querySelectorAll('.page');
+  const navBtns = document.querySelectorAll('.nav-btn');
+
+  const pageMap = {
+    'home': 0, 'day1': 1, 'day2': 2, 'day3': 3, 'day4': 4,
+    'day5': 5, 'day6': 6, 'day7': 7, 'day8': 8, 'day9': 9, 'tips': 10
+  };
+
+  function showPage(id) {
+    pages.forEach(p => p.classList.remove('active'));
+    navBtns.forEach(b => b.classList.remove('active'));
+
+    const target = document.getElementById('page-' + id);
+    if (target) target.classList.add('active');
+
+    const idx = pageMap[id];
+    if (idx !== undefined && navBtns[idx]) navBtns[idx].classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
